@@ -191,4 +191,15 @@ applications to navigate to nested sub-proofs.~
 #check pq_r.left.left
 #check pq_r.left.right
 
+structure Point where
+  T: Type
+  x : T
+  y : T
+
+def pt: Point := ⟨ Nat ,3, 4 ⟩
+def pt2: Point := ⟨ String ,"Hello", "World" ⟩
+#check Point --This is Type 1 because it contains type Type 0
+#check pt
+#check pt2
+
 end DMT1.L00_reasoning
