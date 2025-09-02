@@ -81,7 +81,7 @@ Here we define *proofAndCommutes* as the name of a proof
 of the proposition, *andCommutes*. The program that shows
 that it's true takes any two propositions, names irrelevant
 (the _ _), and shows, first,
-we nean that for any proposition, P, Q, if you have a proof
+we mean that for any proposition, P, Q, if you have a proof
 that shows P ∧ Q is true you can always convert it into one
 showing Q ∧ P is true. In short P ∧ Q → Q ∧ P (and it works
 in the other direction, too.)
@@ -90,17 +90,18 @@ in the other direction, too.)
 theorem proofAndCommutes : andCommutes :=
   fun (P Q : Prop) =>               -- assume propositions, P, Q
     And.intro                       -- construct proof of conj
-      -- left conjuct: P ∧ Q → Q ∧ P
+      -- left conjunct: P ∧ Q → Q ∧ P
       (fun h : P ∧ Q =>             -- assume proof P ∧ Q
         (
           And.intro h.right h.left  -- derive proof of of Q ∧ P
         )
       )
       -- right conjunct: Q ∧ P → P ∧ Q
-      (
-        sorry     -- ok, Lean, trust me (accept as axiom)
+      (fun h : Q ∧ P =>             -- assume proof Q ∧ P
+        (
+          And.intro h.right h.left  -- derive proof of of P ∧ Q
+        )
       )
-
 
 -- Here is the same proof using shorthand notation
 theorem proofAndCommutes' :
@@ -236,14 +237,19 @@ theorem proofAndAssoc : P ∧ (Q ∧ R) ↔ (P ∧ Q) ∧ R :=
       let q := h.right.left
       let r := h.right.right
       let pq := And.intro p q   -- assumble and retirn
-      exact (And.intro pq r)    -- the final proof object
+      exact (And.intro pq r)   -- the final proof object
     )
   )
-  -- provde reverse: (P ∧ Q) ∧ R → P ∧ Q ∧ R
+  -- prove reverse: (P ∧ Q) ∧ R → P ∧ Q ∧ R
   (
     fun
     (h : (P ∧ Q) ∧ R) =>
-    (
-      sorry
+    by (
+      let pq := h.left
+      let p := pq.left
+      let q := pq.right
+      let r := h.right
+      let qr := And.intro q r
+      exact (And.intro p qr)
     )
   )
